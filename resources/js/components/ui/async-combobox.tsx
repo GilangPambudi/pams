@@ -9,7 +9,6 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { Input } from "./input"
-import { useDebounce } from "@/hooks/use-debounce" // We might need to create this hook if it doesn't exist
 
 interface AsyncComboboxProps {
     value?: string
@@ -36,8 +35,18 @@ export function AsyncCombobox({
     const [loading, setLoading] = React.useState(false)
     const [selectedLabel, setSelectedLabel] = React.useState<string>("")
 
-    // Debounce search input
-    const [debouncedSearch] = React.useState(search) // Placeholder for now, will fix if hook missing
+    const fetchOptions = React.useCallback(async (query: string) => {
+        setLoading(true)
+        try {
+            const results = await loadOptions(query)
+            setOptions(results)
+        } catch (error) {
+            console.error("Failed to load options:", error)
+            setOptions([])
+        } finally {
+            setLoading(false)
+        }
+    }, [loadOptions])
 
     React.useEffect(() => {
         const timer = setTimeout(() => {
@@ -47,7 +56,7 @@ export function AsyncCombobox({
         }, 300)
 
         return () => clearTimeout(timer)
-    }, [search, open])
+    }, [search, open, fetchOptions])
 
     // Update selected label when value changes or options update
     React.useEffect(() => {
@@ -60,19 +69,6 @@ export function AsyncCombobox({
             setSelectedLabel("")
         }
     }, [value, options, defaultOptions])
-
-    const fetchOptions = async (query: string) => {
-        setLoading(true)
-        try {
-            const results = await loadOptions(query)
-            setOptions(results)
-        } catch (error) {
-            console.error("Failed to load options:", error)
-            setOptions([])
-        } finally {
-            setLoading(false)
-        }
-    }
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -87,7 +83,7 @@ export function AsyncCombobox({
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full p-0" align="start">
+            <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
                 <div className="p-2 border-b">
                     <Input
                         placeholder={searchPlaceholder}
@@ -131,6 +127,6 @@ export function AsyncCombobox({
                     )}
                 </div>
             </PopoverContent>
-        </Popover>
+        </Popover >
     )
 }

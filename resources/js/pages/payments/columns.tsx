@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Payment } from '@/types';
 import { ColumnDef, Row } from '@tanstack/react-table';
-import { ArrowUpDown, Eye, Pencil, Trash2 } from 'lucide-react';
+import { ArrowUpDown, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 import { Link } from '@inertiajs/react';
 import PaymentModal from './payment-modal';
@@ -37,9 +37,7 @@ export const columns: ColumnDef<Payment>[] = [
         accessorKey: 'tenancy.tenant.full_name',
         header: 'Tenant',
         cell: ({ row }) => (
-            // @ts-ignore
             <Link href={route('tenancies.edit', row.original.tenancy_id)} className="hover:underline">
-                {/* @ts-ignore */}
                 {row.original.tenancy.tenant.full_name}
             </Link>
         ),
@@ -47,7 +45,6 @@ export const columns: ColumnDef<Payment>[] = [
     {
         accessorKey: 'tenancy.property.name',
         header: 'Property',
-        // @ts-ignore
         cell: ({ row }) => row.original.tenancy.property.name,
     },
     {

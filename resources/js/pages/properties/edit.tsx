@@ -15,7 +15,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, Trash2, User } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import PropertyForm from './_form';
 import ActiveTenants from './_active';
 

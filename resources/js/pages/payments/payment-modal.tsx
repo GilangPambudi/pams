@@ -79,7 +79,7 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
             <DialogTrigger asChild>
                 {trigger || (
                     <Button size="sm" className="cursor-pointer">
-                        <Plus className="mr-2 h-4 w-4" />
+                        <Plus className="h-4 w-4" />
                         Add Payment
                     </Button>
                 )}
@@ -120,7 +120,7 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
                                 loadOptions={async (query) => {
                                     const res = await fetch(route('tenancies.search', { query }));
                                     const data = await res.json();
-                                    return data.map((t: any) => ({
+                                    return data.map((t: { value: string; label: string }) => ({
                                         value: String(t.value),
                                         label: t.label,
                                     }));

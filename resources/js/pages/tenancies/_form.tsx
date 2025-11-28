@@ -24,12 +24,6 @@ interface Property {
     standard_monthly_rate: number;
 }
 
-interface Tenant {
-    id: number;
-    full_name: string;
-    origin_city: string;
-}
-
 type Props = {
     action: string;
     method: 'post' | 'patch' | 'put';
@@ -89,7 +83,7 @@ export default function TenancyForm({
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
         const options = {
-            onError: (errors: any) => {
+            onError: (errors: Record<string, string>) => {
                 toast.error("Check-in failed. Please check the form for errors.");
                 console.error(errors);
             },
@@ -199,7 +193,8 @@ export default function TenancyForm({
                                         emptyMessage="No tenant found."
                                         loadOptions={async (query) => {
                                             const res = await fetch(route('tenants.search', { query }));
-                                            return await res.json();
+                                            const data = await res.json();
+                                            return data as { value: string; label: string }[];
                                         }}
                                     />
                                     <InputError message={errors.tenant_id} />

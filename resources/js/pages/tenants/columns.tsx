@@ -3,7 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Tenant } from '@/types';
 import { Link } from '@inertiajs/react';
 import { ColumnDef, type Row } from '@tanstack/react-table';
-import { ArrowUpDown, Eye, Pencil } from 'lucide-react';
+import { ArrowUpDown, Eye } from 'lucide-react';
 
 export const columns: ColumnDef<Tenant>[] = [
     {
