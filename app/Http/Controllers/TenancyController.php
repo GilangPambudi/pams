@@ -127,6 +127,7 @@ class TenancyController extends Controller
             ->when($id, fn($qb) => $qb->where('id', $id))
             ->when($query && !$id, fn($qb) => $qb->whereHas('tenant', fn($qbt) => $qbt->where('full_name', 'like', "%{$query}%"))
                                             ->orWhereHas('property', fn($qbp) => $qbp->where('name', 'like', "%{$query}%")))
+            ->orderBy(Tenant::select('full_name')->whereColumn('tenants.id', 'tenancies.tenant_id'))
             ->limit($limit)
             ->get();
 

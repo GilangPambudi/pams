@@ -30,6 +30,7 @@ class UpdateTenancyRequest extends FormRequest
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'rent_price' => 'required|numeric',
             'status' => 'nullable|string|in:active,finished,cancelled',
+            'leaving_reason' => 'nullable|string',
         ];
     }
 

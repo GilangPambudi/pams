@@ -1,3 +1,4 @@
+import { toast } from 'sonner';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem, Property, Tenancy } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
@@ -29,9 +30,10 @@ type Props = {
     property: Property & {
         tenancies: Tenancy[];
     };
+    can_delete: boolean;
 };
 
-export default function PropertyEdit({ property }: Props) {
+export default function PropertyEdit({ property, can_delete }: Props) {
 
     const handleDelete = () => {
         router.delete(route('properties.destroy', property.id));
@@ -50,27 +52,39 @@ export default function PropertyEdit({ property }: Props) {
                                 Check-in Tenant
                             </Link>
                         </Button>
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button size="sm" variant="destructive">
-                                    <Trash2 className="h-4 w-4" />
-                                    Delete
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        This action cannot be undone. This will permanently delete the property
-                                        "{property.name}" and remove your data from our servers.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction className={buttonVariants({ variant: "destructive" })} onClick={handleDelete}>Continue</AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                        {can_delete ? (
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button size="sm" variant="destructive">
+                                        <Trash2 className="h-4 w-4" />
+                                        Delete
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This will permanently delete the property
+                                            "{property.name}" and remove your data from our servers.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction className={buttonVariants({ variant: "destructive" })} onClick={handleDelete}>Continue</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        ) : (
+                            <Button
+                                size="sm"
+                                variant="destructive"
+                                className="opacity-50"
+                                onClick={() => toast.error("Cannot delete property with active tenants")}
+                            >
+                                <Trash2 className="h-4 w-4" />
+                                Delete
+                            </Button>
+                        )}
                     </div>
                 </div>
 

@@ -68,6 +68,7 @@ export default function TenancyEdit({ tenancy, properties }: Props) {
                                     rent_price: tenancy.rent_price,
                                     status: tenancy.status,
                                     property_id: tenancy.property_id,
+                                    leaving_reason: tenancy.leaving_reason,
                                 }}
                                 properties={properties}
                                 submitLabel="Update"

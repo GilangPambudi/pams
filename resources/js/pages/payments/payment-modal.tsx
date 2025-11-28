@@ -42,6 +42,7 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
         amount: payment?.amount.toString() || defaultAmount?.toString() || '',
         payment_date: payment?.payment_date || format(new Date(), 'yyyy-MM-dd'),
         payment_type: payment?.payment_type || 'monthly_rent',
+        method: payment?.method || 'transfer',
         notes: payment?.notes || '',
     });
 
@@ -191,6 +192,23 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
                             </SelectContent>
                         </Select>
                         <InputError message={errors.payment_type} />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="method">Payment Method</Label>
+                        <Select
+                            value={data.method}
+                            onValueChange={(val) => setData('method', val)}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select method" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="cash">Cash</SelectItem>
+                                <SelectItem value="transfer">Transfer</SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.method} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="notes">Notes (Optional)</Label>

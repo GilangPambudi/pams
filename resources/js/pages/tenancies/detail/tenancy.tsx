@@ -12,12 +12,13 @@ import { cn } from '@/lib/utils';
 import { ChevronDownIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
+import { Textarea } from '@/components/ui/textarea';
 type Props = {
     action: string;
     method: 'post' | 'patch' | 'put';
     submitLabel?: string;
     cancelHref?: string;
-    initial?: Partial<Pick<Tenancy, 'start_date' | 'end_date' | 'rent_price' | 'status' | 'property_id'>>;
+    initial?: Partial<Pick<Tenancy, 'start_date' | 'end_date' | 'rent_price' | 'status' | 'property_id' | 'leaving_reason'>>;
     properties?: Property[];
 };
 
@@ -27,6 +28,7 @@ export default function TenancyDetail({ action, method, submitLabel = 'Save', ca
         end_date: initial?.end_date ?? '',
         rent_price: initial?.rent_price ?? '',
         property_id: initial?.property_id ?? '',
+        leaving_reason: initial?.leaving_reason ?? '',
     });
 
     const submit: FormEventHandler = (e) => {
@@ -152,6 +154,19 @@ export default function TenancyDetail({ action, method, submitLabel = 'Save', ca
                 </Popover>
                 <InputError className="mt-2" message={errors.end_date} />
             </div>
+
+            {data.end_date && (
+                <div className="gap-2 grid">
+                    <Label htmlFor="leaving_reason">Leaving Reason</Label>
+                    <Textarea
+                        id="leaving_reason"
+                        value={data.leaving_reason}
+                        onChange={(e) => setData('leaving_reason', e.target.value)}
+                        placeholder="Reason for leaving..."
+                    />
+                    <InputError className="mt-2" message={errors.leaving_reason} />
+                </div>
+            )}
 
             <div className="flex items-center gap-2">
                 <Button className="cursor-pointer" size="sm" disabled={processing}>

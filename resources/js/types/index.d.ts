@@ -78,20 +78,23 @@ export interface Tenancy {
     end_date: string;
     rent_price: number;
     status: string;
+    leaving_reason: string | null;
+    is_overdue: boolean;
     created_at: string;
     updated_at: string;
     deleted_at: string | null;
-
     property: Property;
     tenant: Tenant;
 }
 
 export interface Payment {
+    tenancy: Tenancy;
     id: number;
     tenancy_id: number;
     amount: number;
     payment_date: string;
     payment_type: string;
+    method: string;
     notes: string | null;
     created_at: string;
     updated_at: string;

@@ -70,6 +70,7 @@ class TenantController extends Controller
     {
         return Inertia::render('tenants/edit', [
             'tenant' => $tenant->only(['id', 'full_name', 'gender', 'date_of_birth', 'origin_city', 'occupation', 'workplace_name', 'phone_number']),
+            'can_delete' => !$tenant->tenancies()->where('status', 'active')->exists(),
         ]);
     }
 
@@ -86,9 +87,15 @@ class TenantController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Tenant $tenant): RedirectResponse
     {
-        //
+        if ($tenant->tenancies()->where('status', 'active')->exists()) {
+            return redirect()->back()->with('error', 'Cannot delete tenant with active tenancy.');
+        }
+
+        $tenant->delete();
+
+        return redirect()->route('tenants.index')->with('success', 'Tenant deleted successfully.');
     }
 
     /**
@@ -101,6 +108,8 @@ class TenantController extends Controller
 
         $tenants = Tenant::query()
             ->when($query, fn($q) => $q->where('full_name', 'like', "%{$query}%"))
+            ->whereDoesntHave('tenancies', fn($q) => $q->where('status', 'active'))
+            ->orderBy('full_name')
             ->limit($limit)
             ->get(['id', 'full_name', 'origin_city']);
 

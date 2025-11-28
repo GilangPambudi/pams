@@ -48,9 +48,9 @@ export const columns: ColumnDef<Payment>[] = [
         cell: ({ row }) => row.original.tenancy.property.name,
     },
     {
-        accessorKey: 'payment_type',
-        header: 'Type',
-        cell: ({ row }) => <span className="capitalize">{row.original.payment_type.replace('_', ' ')}</span>,
+        accessorKey: 'method',
+        header: 'Payment Method',
+        cell: ({ row }) => <span className="capitalize">{row.original.method.replace('_', ' ')}</span>,
     },
     {
         accessorKey: 'amount',

@@ -20,6 +20,7 @@ class Tenancy extends Model
         'end_date',
         'rent_price',
         'status',
+        'leaving_reason',
     ];
 
     protected $casts = [
@@ -27,6 +28,29 @@ class Tenancy extends Model
         'end_date' => 'date',
         'rent_price' => 'decimal:2',
     ];
+
+    protected $appends = ['is_overdue'];
+
+    public function getIsOverdueAttribute(): bool
+    {
+        if ($this->status !== 'active') {
+            return false;
+        }
+
+        $lastPayment = $this->payments()->latest('payment_date')->first();
+
+        if (!$lastPayment) {
+            // If no payment, check if start date is more than 1 month ago?
+            // Or just check if start date is past due?
+            // Let's assume if no payment, it's overdue if start_date is < today
+            return $this->start_date->lt(now());
+        }
+
+        // Next due date is 1 month after last payment
+        $nextDueDate = $lastPayment->payment_date->addMonth();
+
+        return $nextDueDate->lt(now());
+    }
 
     public function tenant(): BelongsTo
     {

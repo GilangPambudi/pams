@@ -94,17 +94,24 @@ export const columns: ColumnDef<Tenancy>[] = [
         cell: ({ row }) => {
             const status = row.original.status;
             return (
-                <Badge
-                    variant={
-                        status === 'active'
-                            ? 'default'
-                            : status === 'cancelled'
-                                ? 'secondary'
-                                : 'destructive'
-                    }
-                >
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                </Badge>
+                <div className="flex items-center">
+                    <Badge
+                        variant={
+                            status === 'active'
+                                ? 'default'
+                                : status === 'cancelled'
+                                    ? 'secondary'
+                                    : 'destructive'
+                        }
+                    >
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                    </Badge>
+                    {row.original.is_overdue && (
+                        <Badge variant="destructive" className="ml-2">
+                            Overdue
+                        </Badge>
+                    )}
+                </div>
             );
         },
     },
