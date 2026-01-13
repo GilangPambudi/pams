@@ -1,9 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { User } from '@/types';
-import { Link } from '@inertiajs/react';
 import { ColumnDef, type Row } from '@tanstack/react-table';
-import { ArrowUpDown, Eye, Pencil } from 'lucide-react';
+import { ArrowUpDown, Eye } from 'lucide-react';
 import UserModal from './user-modal';
 
 export const columns: ColumnDef<User>[] = [

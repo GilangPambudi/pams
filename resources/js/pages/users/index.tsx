@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, User } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { useIndexList } from '@/hooks/use-index-list';
 import { Plus } from 'lucide-react';
 import { useEffect } from 'react';
