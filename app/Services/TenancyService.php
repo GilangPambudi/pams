@@ -34,6 +34,12 @@ class TenancyService
             }
 
             // 2. Create Tenancy
+            $paidForMonths = (int) ($data['paid_for_months'] ?? 1);
+            $validUntil = null;
+            if (isset($data['pay_initial_rent']) && $data['pay_initial_rent'] && ($data['payment_amount'] ?? 0) > 0) {
+                $validUntil = \Carbon\Carbon::parse($data['start_date'])->addMonths($paidForMonths);
+            }
+
             $tenancy = Tenancy::create([
                 'tenant_id' => $tenant->id,
                 'property_id' => $data['property_id'],
@@ -41,6 +47,8 @@ class TenancyService
                 'start_date' => $data['start_date'],
                 'rent_price' => $data['rent_price'],
                 'status' => 'active',
+                'valid_until' => $validUntil,
+                'paid_for_months' => $paidForMonths,
             ]);
 
             // 3. Create Payment (if requested)
@@ -49,7 +57,7 @@ class TenancyService
                     'tenancy_id' => $tenancy->id,
                     'amount' => $data['payment_amount'],
                     'payment_date' => now(),
-                    'payment_type' => 'monthly_rent', // Default to monthly rent for initial payment
+                    'payment_type' => 'monthly_rent',
                     'notes' => 'Initial payment upon check-in',
                 ]);
             }

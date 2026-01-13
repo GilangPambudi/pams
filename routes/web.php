@@ -8,6 +8,15 @@ use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenancyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\UserController;
+
+Route::get('/register', function () {
+    abort(403);
+});
+
+Route::post('/register', function () {
+    abort(403);
+});
 
 Route::get('/', function () {
     return redirect('/login');
@@ -22,6 +31,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('tenancies/search', [TenancyController::class, 'search'])->name('tenancies.search');
     Route::resource('tenancies', TenancyController::class);
     Route::resource('payments', PaymentController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('users', UserController::class);
 });
 
 require __DIR__.'/settings.php';

@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         
         $this->call([
             PropertySeeder::class,
-            TenantSeeder::class,
+            CsvDataSeeder::class,
         ]);
 
     }

@@ -27,6 +27,7 @@ class StorePaymentRequest extends FormRequest
             'payment_date' => 'required|date',
             'payment_type' => 'required|in:monthly_rent,deposit,other',
             'method' => 'required|in:cash,transfer,other',
+            'paid_for_months' => 'required|integer|min:1|max:12',
             'notes' => 'nullable|string|max:255',
         ];
     }

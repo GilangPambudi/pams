@@ -47,7 +47,16 @@ class PaymentController extends Controller
     public function store(StorePaymentRequest $request): RedirectResponse
     {
         DB::transaction(function () use ($request) {
-            Payment::create($request->validated());
+            $payment = Payment::create($request->validated());
+
+            $tenancy = $payment->tenancy;
+            $paidForMonths = (int) $request->input('paid_for_months', 1);
+            $newValidUntil = $payment->payment_date->addMonths($paidForMonths);
+
+            $tenancy->update([
+                'valid_until' => $newValidUntil,
+                'paid_for_months' => $paidForMonths,
+            ]);
         });
 
         return back()->with('success', 'Payment recorded successfully.');

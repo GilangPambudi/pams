@@ -79,6 +79,8 @@ export interface Tenancy {
     rent_price: number;
     status: string;
     leaving_reason: string | null;
+    valid_until: string | null;
+    paid_for_months: number;
     is_overdue: boolean;
     created_at: string;
     updated_at: string;

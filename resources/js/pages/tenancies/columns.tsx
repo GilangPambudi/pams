@@ -63,7 +63,24 @@ export const columns: ColumnDef<Tenancy>[] = [
         ),
         cell: ({ row }) => {
             const date = new Date(row.original.start_date);
-            return date.toLocaleDateString('en-GB'); // Formats date as DD/MM/YYYY
+            return date.toLocaleDateString('en-GB');
+        },
+    },
+    {
+        accessorKey: 'valid_until',
+        header: ({ column }) => (
+            <div onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="flex justify-between items-center cursor-pointer">
+                Paid Until
+                <ArrowUpDown className="ml-2 w-4 h-4" />
+            </div>
+        ),
+        cell: ({ row }) => {
+            const validUntil = row.original.valid_until;
+            if (!validUntil) {
+                return '-';
+            }
+            const date = new Date(validUntil);
+            return date.toLocaleDateString('en-GB');
         },
     },
     {

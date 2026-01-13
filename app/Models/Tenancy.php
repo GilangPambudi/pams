@@ -21,11 +21,14 @@ class Tenancy extends Model
         'rent_price',
         'status',
         'leaving_reason',
+        'valid_until',
+        'paid_for_months',
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
+        'valid_until' => 'date',
         'rent_price' => 'decimal:2',
     ];
 
@@ -37,19 +40,11 @@ class Tenancy extends Model
             return false;
         }
 
-        $lastPayment = $this->payments()->latest('payment_date')->first();
-
-        if (!$lastPayment) {
-            // If no payment, check if start date is more than 1 month ago?
-            // Or just check if start date is past due?
-            // Let's assume if no payment, it's overdue if start_date is < today
+        if (!$this->valid_until) {
             return $this->start_date->lt(now());
         }
 
-        // Next due date is 1 month after last payment
-        $nextDueDate = $lastPayment->payment_date->addMonth();
-
-        return $nextDueDate->lt(now());
+        return $this->valid_until->lt(now());
     }
 
     public function tenant(): BelongsTo

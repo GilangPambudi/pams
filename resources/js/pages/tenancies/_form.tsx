@@ -62,6 +62,7 @@ export default function TenancyForm({
         rent_price: '',
 
         pay_initial_rent: true,
+        paid_for_months: '1',
         payment_amount: '',
 
         status: initial?.status || 'active',
@@ -269,6 +270,15 @@ export default function TenancyForm({
                                         <InputError message={errors.occupation} />
                                     </div>
                                     <div className="space-y-2">
+                                        <Label htmlFor="workplace_name">Workplace Name</Label>
+                                        <Input
+                                            id="workplace_name"
+                                            value={data.workplace_name}
+                                            onChange={e => setData('workplace_name', e.target.value)}
+                                        />
+                                        <InputError message={errors.occupation} />
+                                    </div>
+                                    <div className="space-y-2">
                                         <Label htmlFor="phone_number">Phone Number</Label>
                                         <Input
                                             id="phone_number"
@@ -379,22 +389,51 @@ export default function TenancyForm({
                                 </div>
 
                                 {data.pay_initial_rent && (
-                                    <div className="space-y-2">
-                                        <Label htmlFor="payment_amount">Payment Amount</Label>
-                                        <Input
-                                            id="payment_amount"
-                                            type="text"
-                                            inputMode="numeric"
-                                            value={data.payment_amount ? new Intl.NumberFormat('id-ID').format(Number(data.payment_amount)) : ''}
-                                            onChange={(e) => {
-                                                const rawValue = e.target.value.replace(/\./g, '');
-                                                if (!isNaN(Number(rawValue))) {
-                                                    setData('payment_amount', rawValue);
-                                                }
-                                            }}
-                                        />
-                                        <InputError message={errors.payment_amount} />
-                                    </div>
+                                    <>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="paid_for_months">Paid For (Months)</Label>
+                                            <Select
+                                                value={data.paid_for_months}
+                                                onValueChange={(val) => {
+                                                    const months = Number(val);
+                                                    const baseRent = Number(data.rent_price) || 0;
+                                                    setData((prev) => ({
+                                                        ...prev,
+                                                        paid_for_months: val,
+                                                        payment_amount: (baseRent * months).toString(),
+                                                    }));
+                                                }}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select months" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                                                        <SelectItem key={month} value={String(month)}>
+                                                            {month} {month === 1 ? 'Month' : 'Months'}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            <InputError message={errors.paid_for_months} />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="payment_amount">Payment Amount</Label>
+                                            <Input
+                                                id="payment_amount"
+                                                type="text"
+                                                inputMode="numeric"
+                                                value={data.payment_amount ? new Intl.NumberFormat('id-ID').format(Number(data.payment_amount)) : ''}
+                                                onChange={(e) => {
+                                                    const rawValue = e.target.value.replace(/\./g, '');
+                                                    if (!isNaN(Number(rawValue))) {
+                                                        setData('payment_amount', rawValue);
+                                                    }
+                                                }}
+                                            />
+                                            <InputError message={errors.payment_amount} />
+                                        </div>
+                                    </>
                                 )}
                             </div>
                         </CardContent>

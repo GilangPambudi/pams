@@ -34,6 +34,14 @@ export const columns: ColumnDef<Payment>[] = [
         cell: ({ row }) => format(new Date(row.original.payment_date), 'dd MMM yyyy'),
     },
     {
+        accessorKey: 'tenancy.valid_until',
+        header: 'Paid Until',
+        cell: ({ row }) => {
+            const validUntil = row.original.tenancy.valid_until;
+            return validUntil ? format(new Date(validUntil), 'dd MMM yyyy') : '-';
+        },
+    },
+    {
         accessorKey: 'tenancy.tenant.full_name',
         header: 'Tenant',
         cell: ({ row }) => (

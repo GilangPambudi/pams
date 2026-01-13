@@ -35,6 +35,7 @@ interface Props {
 
 export default function PaymentModal({ tenancyId, defaultAmount, payment, trigger, onSuccess }: Props) {
     const [open, setOpen] = useState(false);
+    const [baseRentPrice, setBaseRentPrice] = useState<number>(defaultAmount || 0);
     const isEditing = !!payment;
 
     const { data, setData, post, put, processing, errors, reset } = useForm({
@@ -43,6 +44,7 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
         payment_date: payment?.payment_date || format(new Date(), 'yyyy-MM-dd'),
         payment_type: payment?.payment_type || 'monthly_rent',
         method: payment?.method || 'transfer',
+        paid_for_months: '1',
         notes: payment?.notes || '',
     });
 
@@ -85,7 +87,7 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
                     </Button>
                 )}
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[40%] md:max-w-[40%] lg:max-w-[40%] max-h-[90vh] overflow-y-auto scrollbar-hide">
                 <DialogHeader>
                     <DialogTitle>{isEditing ? 'Edit Payment' : 'Add Payment'}</DialogTitle>
                     <DialogDescription>
@@ -106,10 +108,13 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
                                             .then(res => res.json())
                                             .then(data => {
                                                 if (data.length > 0) {
+                                                    const rentPrice = Number(data[0].rent_price);
+                                                    setBaseRentPrice(rentPrice);
                                                     setData((prev) => ({
                                                         ...prev,
                                                         tenancy_id: selectedId,
-                                                        amount: data[0].rent_price.toString(),
+                                                        amount: rentPrice.toString(),
+                                                        paid_for_months: '1',
                                                     }));
                                                 }
                                             });
@@ -157,6 +162,32 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
                         <InputError message={errors.payment_date} />
                     </div>
                     <div className="grid gap-2">
+                        <Label htmlFor="paid_for_months">Paid For (Months)</Label>
+                        <Select
+                            value={data.paid_for_months}
+                            onValueChange={(val) => {
+                                const months = Number(val);
+                                setData((prev) => ({
+                                    ...prev,
+                                    paid_for_months: val,
+                                    amount: (baseRentPrice * months).toString(),
+                                }));
+                            }}
+                        >
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select months" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                                    <SelectItem key={month} value={String(month)}>
+                                        {month} {month === 1 ? 'Month' : 'Months'}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <InputError message={errors.paid_for_months} />
+                    </div>
+                    <div className="grid gap-2">
                         <Label htmlFor="amount">Amount (IDR)</Label>
                         <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">Rp</span>
@@ -187,8 +218,6 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="monthly_rent">Monthly Rent</SelectItem>
-                                <SelectItem value="deposit">Deposit</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError message={errors.payment_type} />
@@ -205,7 +234,6 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
                             <SelectContent>
                                 <SelectItem value="cash">Cash</SelectItem>
                                 <SelectItem value="transfer">Transfer</SelectItem>
-                                <SelectItem value="other">Other</SelectItem>
                             </SelectContent>
                         </Select>
                         <InputError message={errors.method} />

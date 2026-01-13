@@ -69,6 +69,12 @@ const navItems: (NavItem | NavGroup)[] = [
         icon: CreditCard,
         isActive: (url) => url.startsWith('/payments'),
     },
+    {
+        title: 'Users',
+        url: '/users',
+        icon: Users,
+        isActive: (url) => url.startsWith('/users'),
+    },
 ];
 
 export function AppSidebar() {
