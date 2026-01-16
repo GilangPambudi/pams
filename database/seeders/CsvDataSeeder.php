@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Payment;
 use App\Models\Property;
 use App\Models\Tenancy;
 use App\Models\Tenant;
@@ -61,26 +62,69 @@ class CsvDataSeeder extends Seeder
     private function createTenantAndTenancy(array $row, Property $property): void
     {
         $startDate = $row['start_date'] ? Carbon::parse($row['start_date']) : now();
+        $decemberFirst2025 = Carbon::create(2025, 12, 1);
+        $startDay = $startDate->day;
+
+        if ($startDate->lt($decemberFirst2025)) {
+            $validUntil = Carbon::create(2025, 12, $startDay);
+        } else {
+            $validUntil = $startDate->copy()->addMonth();
+        }
+        
+        $monthsPaid = $this->calculateMonthsBetween($startDate, $validUntil);
 
         $tenant = Tenant::create([
             'full_name' => $row['name'],
             'gender' => 'female',
-            'date_of_birth' => fake()->dateTimeBetween('-35 years', '-18 years'),
+            'date_of_birth' => null,
             'origin_city' => $row['origin_city'],
-            'occupation' => 'employee',
+            'occupation' => 'Karyawan',
             'workplace_name' => $row['workplace_name'],
             'phone_number' => null,
         ]);
 
-        Tenancy::create([
+        $tenancy = Tenancy::create([
             'tenant_id' => $tenant->id,
             'property_id' => $property->id,
             'room_number' => null,
             'start_date' => $startDate,
             'rent_price' => $property->standard_monthly_rate,
             'status' => 'active',
-            'valid_until' => $startDate->copy()->addMonth(),
-            'paid_for_months' => 1,
+            'valid_until' => $validUntil,
+            'paid_for_months' => $monthsPaid,
         ]);
+
+        $this->createMonthlyPayments($tenancy, $startDate, $validUntil, $property->standard_monthly_rate);
+    }
+
+    private function calculateMonthsBetween(Carbon $startDate, Carbon $endDate): int
+    {
+        $months = 0;
+        $current = $startDate->copy();
+
+        while ($current->lt($endDate)) {
+            $months++;
+            $current->addMonth();
+        }
+
+        return max($months, 1);
+    }
+
+    private function createMonthlyPayments(Tenancy $tenancy, Carbon $startDate, Carbon $validUntil, float $rentPrice): void
+    {
+        $currentPaymentDate = $startDate->copy();
+
+        while ($currentPaymentDate->lt($validUntil)) {
+            Payment::create([
+                'tenancy_id' => $tenancy->id,
+                'amount' => $rentPrice,
+                'payment_date' => $currentPaymentDate->copy(),
+                'payment_type' => 'monthly_rent',
+                'method' => 'transfer',
+                'notes' => null,
+            ]);
+
+            $currentPaymentDate->addMonth();
+        }
     }
 }

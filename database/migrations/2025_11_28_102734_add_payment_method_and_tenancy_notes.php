@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->enum('payment_type', ['monthly_rent', 'deposit', 'other'])->default('monthly_rent')->change(); // Ensure existing column is correct if needed, but we are adding 'method'
-            $table->enum('method', ['cash', 'transfer', 'other'])->default('transfer')->after('amount');
+            $table->enum('payment_type', ['monthly_rent', 'other'])->default('monthly_rent')->change(); // Ensure existing column is correct if needed, but we are adding 'method'
+            $table->enum('method', ['cash', 'transfer'])->default('transfer')->after('amount');
         });
 
         Schema::table('tenancies', function (Blueprint $table) {

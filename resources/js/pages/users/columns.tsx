@@ -47,6 +47,10 @@ export const columns: ColumnDef<User>[] = [
                 <ArrowUpDown className="ml-2 w-4 h-4" />
             </div>
         ),
+        cell: ({ row }) => {
+            const date = new Date(row.getValue('updated_at'));
+            return date.toLocaleTimeString('en-GB') + ', ' + date.toLocaleDateString('en-GB');
+        },
     },
     {
         id: 'actions',

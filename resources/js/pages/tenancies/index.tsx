@@ -65,7 +65,7 @@ export default function TenanciesIndex({ tenancies, filters, properties }: Props
                 <SelectContent align="end">
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="not_active">Not Active</SelectItem>
+                    <SelectItem value="finished">Finished</SelectItem>
                 </SelectContent>
             </Select>
             <Select

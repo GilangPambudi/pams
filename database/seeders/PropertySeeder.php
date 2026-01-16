@@ -18,7 +18,7 @@ class PropertySeeder extends Seeder
                 'name' => 'Kos Putri Pinurih',
                 'address' => 'Jalan Dokter Wahidin Sudirohusodo, Gang Manggis I Nomor 2',
                 'total_capacity' => 7,
-                'standard_monthly_rate' => 650000,
+                'standard_monthly_rate' => 600000,
             ],
             [
                 'name' => 'Kos Putri Melati',

@@ -79,13 +79,17 @@ export const columns: ColumnDef<Tenant>[] = [
             </div>
         ),
         cell: ({ row }) => {
-            const date = new Date(row.getValue('date_of_birth'));
+            const dateValue = row.getValue('date_of_birth') as string;
+            if (!dateValue) return null;
+
+            const date = new Date(dateValue);
             const formattedDate = new Intl.DateTimeFormat('id-ID', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric',
             }).format(date);
             const age = new Date().getFullYear() - date.getFullYear();
+
             return (
                 <div>
                     {formattedDate} <span className="text-muted-foreground">({age} tahun)</span>

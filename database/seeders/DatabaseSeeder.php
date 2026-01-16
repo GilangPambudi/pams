@@ -21,9 +21,9 @@ class DatabaseSeeder extends Seeder
             ['email' => 'gilangpambudiwibawanto@gmail.com'],
             [
                 'name' => 'Gilang',
-                'password' => 'gilangpambudiwibawanto@gmail.com',
+                'password' => '@gilangpambudiwibawanto@gmail.com',
                 'email_verified_at' => now(),
-            ]
+            ],
         );
         
         $this->call([

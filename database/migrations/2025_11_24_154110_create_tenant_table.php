@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id()->comment('ID unik untuk setiap penghuni.');
             $table->string('full_name')->comment('Nama lengkap.');
             $table->string('gender')->comment('Jenis kelamin.');
-            $table->date('date_of_birth')->comment('Kunci untuk analisis usia.');
+            $table->date('date_of_birth')->nullable()->comment('Kunci untuk analisis usia.');
             $table->string('origin_city')->comment('Kota asal untuk analisis demografi.');
             $table->string('occupation')->comment('Status/Jenis Pekerjaan.');
             $table->string('workplace_name')->nullable()->comment('Tempat kerja/kampus.');
