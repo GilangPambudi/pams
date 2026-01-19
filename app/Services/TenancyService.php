@@ -53,10 +53,15 @@ class TenancyService
 
             // 3. Create Payment (if requested)
             if (isset($data['pay_initial_rent']) && $data['pay_initial_rent'] && ($data['payment_amount'] ?? 0) > 0) {
+                $paymentDate = match ($data['initial_payment_date_option'] ?? 'now') {
+                    'start_date' => $data['start_date'],
+                    default => now(),
+                };
+
                 Payment::create([
                     'tenancy_id' => $tenancy->id,
                     'amount' => $data['payment_amount'],
-                    'payment_date' => now(),
+                    'payment_date' => $paymentDate,
                     'payment_type' => 'monthly_rent',
                     'notes' => 'Initial payment upon check-in',
                 ]);

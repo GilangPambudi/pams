@@ -55,6 +55,7 @@ class StoreTenancyRequest extends FormRequest
 
             // Payment Data (Optional)
             'pay_initial_rent' => ['boolean'],
+            'initial_payment_date_option' => ['nullable', 'string', 'in:now,start_date'],
             'paid_for_months' => ['required_if:pay_initial_rent,true', 'integer', 'min:1', 'max:12'],
             'payment_amount' => ['required_if:pay_initial_rent,true', 'numeric', 'min:0'],
         ];

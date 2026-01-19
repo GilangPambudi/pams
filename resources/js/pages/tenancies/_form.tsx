@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tenancy } from '@/types';
 import { Link, useForm } from '@inertiajs/react';
 import { FormEventHandler, useEffect, useState } from 'react';
@@ -62,6 +63,7 @@ export default function TenancyForm({
         rent_price: '',
 
         pay_initial_rent: true,
+        initial_payment_date_option: 'start_date',
         paid_for_months: '1',
         payment_amount: '',
 
@@ -381,11 +383,34 @@ export default function TenancyForm({
                                         checked={data.pay_initial_rent}
                                         onCheckedChange={(checked) => setData('pay_initial_rent', checked as boolean)}
                                     />
-                                    <Label htmlFor="pay_initial_rent">Pay Initial Rent Now?</Label>
+                                    <Label htmlFor="pay_initial_rent">Pay Initial Rent</Label>
+                                    <br />
                                 </div>
 
                                 {data.pay_initial_rent && (
                                     <>
+                                        <div className="space-y-2">
+                                            <RadioGroup
+                                                value={data.initial_payment_date_option}
+                                                onValueChange={(val) => setData('initial_payment_date_option', val)}
+                                                className="flex flex-row space-x-2"
+                                            >
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="start_date" id="option-start-date" />
+                                                    <Label htmlFor="option-start-date" className="font-normal cursor-pointer">
+                                                        Start Date ({data.start_date ? format(new Date(data.start_date), 'dd MMM yyyy') : '-'})
+                                                    </Label>
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <RadioGroupItem value="now" id="option-now" />
+                                                    <Label htmlFor="option-now" className="font-normal cursor-pointer">
+                                                        Today (Now)
+                                                    </Label>
+                                                </div>
+
+                                            </RadioGroup>
+                                        </div>
+
                                         <div className="space-y-2">
                                             <Label htmlFor="paid_for_months">Paid For (Months)</Label>
                                             <Select
@@ -484,6 +509,6 @@ export default function TenancyForm({
                     </CardContent>
                 </Card>
             </div>
-        </form>
+        </form >
     );
 }
