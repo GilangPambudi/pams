@@ -43,8 +43,8 @@ export default function PaymentsIndex({ payments, filters, properties }: Props) 
     );
 
     useEffect(() => {
-        if (flash?.success) toast.success(flash.success);
-        if (flash?.error) toast.error(flash.error);
+        if (flash?.success) toast.success(flash.success, { id: 'flash-success' });
+        if (flash?.error) toast.error(flash.error, { id: 'flash-error' });
     }, [flash?.success, flash?.error]);
 
     const rightActions = (

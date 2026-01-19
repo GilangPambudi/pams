@@ -10,12 +10,23 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AsyncCombobox } from '@/components/ui/async-combobox';
 import { Textarea } from '@/components/ui/textarea';
-import { useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -247,7 +258,44 @@ export default function PaymentModal({ tenancyId, defaultAmount, payment, trigge
                         />
                         <InputError message={errors.notes} />
                     </div>
-                    <DialogFooter>
+                    <DialogFooter className="flex justify-end sm:justify-end">
+                        {isEditing && payment && (
+                            <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                    <Button variant="destructive" type="button" disabled={processing}>
+                                        Delete Payment
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This will permanently delete the payment record.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction
+                                            onClick={() => {
+                                                router.delete(route('payments.destroy', payment.id), {
+                                                    onSuccess: () => {
+                                                        setOpen(false);
+                                                        toast.success('Payment voided successfully');
+                                                        onSuccess?.();
+                                                    },
+                                                    onError: () => {
+                                                        toast.error('Failed to void payment');
+                                                    },
+                                                });
+                                            }}
+                                            className="bg-destructive text-white hover:bg-destructive/70"
+                                        >
+                                            Delete
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        )}
                         <Button type="submit" disabled={processing}>
                             Save Payment
                         </Button>
