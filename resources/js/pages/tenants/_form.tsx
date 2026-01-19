@@ -60,10 +60,7 @@ export default function TenantForm({ action, method, submitLabel = 'Save', cance
 
             <div className="gap-2 grid">
                 <Label htmlFor="gender">Gender</Label>
-                <Select
-                    value={data.gender}
-                    onValueChange={(value) => setData('gender', value)}
-                >
+                <Select value={data.gender} onValueChange={val => setData('gender', val)}>
                     <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
@@ -76,7 +73,32 @@ export default function TenantForm({ action, method, submitLabel = 'Save', cance
             </div>
 
             <div className="gap-2 grid">
-                <Label htmlFor="date_of_birth">Date of Birth</Label>
+                <Label htmlFor="origin_city">Origin City</Label>
+                <Input
+                    id="origin_city"
+                    name="origin_city"
+                    value={data.origin_city}
+                    onChange={(e) => setData('origin_city', e.target.value)}
+                    required
+                    placeholder="e.g., Bandung"
+                />
+                <InputError className="mt-2" message={errors.origin_city} />
+            </div>
+
+            <div className="gap-2 grid">
+                <Label htmlFor="workplace_name">Workplace Name</Label>
+                <Input
+                    id="workplace_name"
+                    name="workplace_name"
+                    value={data.workplace_name}
+                    onChange={(e) => setData('workplace_name', e.target.value)}
+                    placeholder="e.g., University of Indonesia"
+                />
+                <InputError className="mt-2" message={errors.workplace_name} />
+            </div>
+
+            <div className="gap-2 grid">
+                <Label htmlFor="date_of_birth">Date of Birth (Optional) </Label>
                 <Popover>
                     <PopoverTrigger asChild>
                         <Button
@@ -104,45 +126,19 @@ export default function TenantForm({ action, method, submitLabel = 'Save', cance
             </div>
 
             <div className="gap-2 grid">
-                <Label htmlFor="origin_city">Origin City</Label>
-                <Input
-                    id="origin_city"
-                    name="origin_city"
-                    value={data.origin_city}
-                    onChange={(e) => setData('origin_city', e.target.value)}
-                    required
-                    placeholder="e.g., Bandung"
-                />
-                <InputError className="mt-2" message={errors.origin_city} />
-            </div>
-
-            <div className="gap-2 grid">
-                <Label htmlFor="occupation">Occupation</Label>
+                <Label htmlFor="occupation">Occupation (Optional)</Label>
                 <Input
                     id="occupation"
                     name="occupation"
                     value={data.occupation}
                     onChange={(e) => setData('occupation', e.target.value)}
-                    required
                     placeholder="e.g., Student"
                 />
                 <InputError className="mt-2" message={errors.occupation} />
             </div>
 
             <div className="gap-2 grid">
-                <Label htmlFor="workplace_name">Workplace Name</Label>
-                <Input
-                    id="workplace_name"
-                    name="workplace_name"
-                    value={data.workplace_name}
-                    onChange={(e) => setData('workplace_name', e.target.value)}
-                    placeholder="e.g., University of Indonesia"
-                />
-                <InputError className="mt-2" message={errors.workplace_name} />
-            </div>
-
-            <div className="gap-2 grid">
-                <Label htmlFor="phone_number">Phone Number</Label>
+                <Label htmlFor="phone_number">Phone Number (Optional) </Label>
                 <Input
                     id="phone_number"
                     name="phone_number"

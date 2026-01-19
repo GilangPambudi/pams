@@ -117,16 +117,12 @@ export default function TenancyForm({
                 setError('gender', 'Gender is required.');
                 isValid = false;
             }
-            if (!data.date_of_birth) {
-                setError('date_of_birth', 'Date of birth is required.');
-                isValid = false;
-            }
             if (!data.origin_city) {
                 setError('origin_city', 'Origin city is required.');
                 isValid = false;
             }
-            if (!data.occupation) {
-                setError('occupation', 'Occupation is required.');
+            if (!data.workplace_name) {
+                setError('workplace_name', 'Workplace Name is required.');
                 isValid = false;
             }
 
@@ -140,7 +136,7 @@ export default function TenancyForm({
 
     const isStep1Complete = !isNewTenant
         ? !!data.tenant_id
-        : (!!data.full_name && !!data.gender && !!data.date_of_birth && !!data.origin_city && !!data.occupation);
+        : (!!data.full_name && !!data.gender && !!data.origin_city && !!data.workplace_name);
 
     const nextStep = () => {
         if (validateStep1()) {
@@ -225,7 +221,16 @@ export default function TenancyForm({
                                         <InputError message={errors.gender} />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="date_of_birth">Date of Birth</Label>
+                                        <Label htmlFor="origin_city">Origin City</Label>
+                                        <Input
+                                            id="origin_city"
+                                            value={data.origin_city}
+                                            onChange={e => setData('origin_city', e.target.value)}
+                                        />
+                                        <InputError message={errors.origin_city} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="date_of_birth">Date of Birth (Optional)</Label>
                                         <Popover>
                                             <PopoverTrigger asChild>
                                                 <Button
@@ -252,16 +257,16 @@ export default function TenancyForm({
                                         <InputError message={errors.date_of_birth} />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="origin_city">Origin City</Label>
+                                        <Label htmlFor="workplace_name">Workplace Name</Label>
                                         <Input
-                                            id="origin_city"
-                                            value={data.origin_city}
-                                            onChange={e => setData('origin_city', e.target.value)}
+                                            id="workplace_name"
+                                            value={data.workplace_name}
+                                            onChange={e => setData('workplace_name', e.target.value)}
                                         />
-                                        <InputError message={errors.origin_city} />
+                                        <InputError message={errors.workplace_name} />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="occupation">Occupation</Label>
+                                        <Label htmlFor="occupation">Occupation (Optional)</Label>
                                         <Input
                                             id="occupation"
                                             value={data.occupation}
@@ -270,16 +275,7 @@ export default function TenancyForm({
                                         <InputError message={errors.occupation} />
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="workplace_name">Workplace Name</Label>
-                                        <Input
-                                            id="workplace_name"
-                                            value={data.workplace_name}
-                                            onChange={e => setData('workplace_name', e.target.value)}
-                                        />
-                                        <InputError message={errors.occupation} />
-                                    </div>
-                                    <div className="space-y-2">
-                                        <Label htmlFor="phone_number">Phone Number</Label>
+                                        <Label htmlFor="phone_number">Phone Number (Optional) </Label>
                                         <Input
                                             id="phone_number"
                                             value={data.phone_number}

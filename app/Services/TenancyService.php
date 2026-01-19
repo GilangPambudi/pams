@@ -25,9 +25,9 @@ class TenancyService
                 $tenant = Tenant::create([
                     'full_name' => $data['full_name'],
                     'gender' => $data['gender'],
-                    'date_of_birth' => $data['date_of_birth'],
+                    'date_of_birth' => $data['date_of_birth'] ?? null,
                     'origin_city' => $data['origin_city'],
-                    'occupation' => $data['occupation'],
+                    'occupation' => $data['occupation'] ?? null,
                     'workplace_name' => $data['workplace_name'] ?? null,
                     'phone_number' => $data['phone_number'] ?? null,
                 ]);

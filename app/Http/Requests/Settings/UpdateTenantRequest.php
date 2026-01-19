@@ -27,8 +27,8 @@ class UpdateTenantRequest extends FormRequest
             'gender' => 'required|string|in:male,female',
             'date_of_birth' => 'nullable|date',
             'origin_city' => 'required|string|max:255',
-            'occupation' => 'required|string|max:255',
-            'workplace_name' => 'required|string|max:255',
+            'occupation' => 'nullable|string|max:255',
+            'workplace_name' => 'nullable|string|max:255',
             'phone_number' => 'nullable|string|max:255',
         ];
     }

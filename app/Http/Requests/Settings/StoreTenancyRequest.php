@@ -41,10 +41,10 @@ class StoreTenancyRequest extends FormRequest
             ],
             'full_name' => ['required_without:tenant_id', 'nullable', 'string', 'max:255'],
             'gender' => ['required_without:tenant_id', 'nullable', 'string', 'in:male,female'],
-            'date_of_birth' => ['required_without:tenant_id', 'nullable', 'date'],
+            'date_of_birth' => ['nullable', 'date'],
             'origin_city' => ['required_without:tenant_id', 'nullable', 'string', 'max:255'],
-            'occupation' => ['required_without:tenant_id', 'nullable', 'string', 'max:255'],
-            'workplace_name' => ['nullable', 'string', 'max:255'],
+            'occupation' => ['nullable', 'string', 'max:255'],
+            'workplace_name' => ['required_without:tenant_id', 'nullable', 'string', 'max:255'],
             'phone_number' => ['nullable', 'string', 'max:20'],
 
             // Tenancy Data

@@ -70,53 +70,53 @@ export const columns: ColumnDef<Tenant>[] = [
             </div>
         ),
     },
-    {
-        accessorKey: 'date_of_birth',
-        header: ({ column }) => (
-            <div onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="flex justify-between items-center cursor-pointer">
-                Date of Birth
-                <ArrowUpDown className="ml-2 w-4 h-4" />
-            </div>
-        ),
-        cell: ({ row }) => {
-            const dateValue = row.getValue('date_of_birth') as string;
-            if (!dateValue) return null;
+    // {
+    //     accessorKey: 'date_of_birth',
+    //     header: ({ column }) => (
+    //         <div onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="flex justify-between items-center cursor-pointer">
+    //             Date of Birth
+    //             <ArrowUpDown className="ml-2 w-4 h-4" />
+    //         </div>
+    //     ),
+    //     cell: ({ row }) => {
+    //         const dateValue = row.getValue('date_of_birth') as string;
+    //         if (!dateValue) return null;
 
-            const date = new Date(dateValue);
-            const formattedDate = new Intl.DateTimeFormat('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-            }).format(date);
-            const age = new Date().getFullYear() - date.getFullYear();
+    //         const date = new Date(dateValue);
+    //         const formattedDate = new Intl.DateTimeFormat('id-ID', {
+    //             day: 'numeric',
+    //             month: 'long',
+    //             year: 'numeric',
+    //         }).format(date);
+    //         const age = new Date().getFullYear() - date.getFullYear();
 
-            return (
-                <div>
-                    {formattedDate} <span className="text-muted-foreground">({age} tahun)</span>
-                </div>
-            );
-        },
-    },
-    {
-        accessorKey: 'phone_number',
-        header: ({ column }) => (
-            <div onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="flex justify-between items-center cursor-pointer">
-                Phone Number
-                <ArrowUpDown className="ml-2 w-4 h-4" />
-            </div>
-        ),
-        cell: ({ row }) => {
-            let phone = row.getValue('phone_number') as string;
-            if (phone) {
-                if (phone.startsWith('0')) {
-                    phone = '+62' + phone.slice(1);
-                } else if (phone.startsWith('62')) {
-                    phone = '+' + phone;
-                }
-            }
-            return <div>{phone}</div>;
-        },
-    },
+    //         return (
+    //             <div>
+    //                 {formattedDate} <span className="text-muted-foreground">({age} tahun)</span>
+    //             </div>
+    //         );
+    //     },
+    // },
+    // {
+    //     accessorKey: 'phone_number',
+    //     header: ({ column }) => (
+    //         <div onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')} className="flex justify-between items-center cursor-pointer">
+    //             Phone Number
+    //             <ArrowUpDown className="ml-2 w-4 h-4" />
+    //         </div>
+    //     ),
+    //     cell: ({ row }) => {
+    //         let phone = row.getValue('phone_number') as string;
+    //         if (phone) {
+    //             if (phone.startsWith('0')) {
+    //                 phone = '+62' + phone.slice(1);
+    //             } else if (phone.startsWith('62')) {
+    //                 phone = '+' + phone;
+    //             }
+    //         }
+    //         return <div>{phone}</div>;
+    //     },
+    // },
     {
         id: 'actions',
         cell: ({ row }) => <TenantActionsCell row={row} />,

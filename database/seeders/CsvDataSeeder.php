@@ -78,7 +78,7 @@ class CsvDataSeeder extends Seeder
             'gender' => 'female',
             'date_of_birth' => null,
             'origin_city' => $row['origin_city'],
-            'occupation' => 'Karyawan',
+            'occupation' => 'Pegawai',
             'workplace_name' => $row['workplace_name'],
             'phone_number' => null,
         ]);

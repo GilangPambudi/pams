@@ -79,7 +79,7 @@ export default function PropertyEdit({ property, can_delete }: Props) {
                                 size="sm"
                                 variant="destructive"
                                 className="opacity-50"
-                                onClick={() => toast.error("Cannot delete property with active tenants")}
+                                onClick={() => toast.error("Cannot delete property with existing tenancy records")}
                             >
                                 <Trash2 className="h-4 w-4" />
                                 Delete

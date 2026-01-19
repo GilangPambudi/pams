@@ -68,7 +68,7 @@ class PropertyController extends Controller
 
         return Inertia::render('properties/edit', [
             'property' => $property,
-            'can_delete' => !$property->activeTenants()->exists(),
+            'can_delete' => !$property->tenancies()->exists(),
         ]);
     }
 
@@ -87,8 +87,8 @@ class PropertyController extends Controller
      */
     public function destroy(Property $property): RedirectResponse
     {
-        if ($property->activeTenants()->exists()) {
-            return redirect()->back()->with('error', 'Cannot delete property with active tenants.');
+        if ($property->tenancies()->exists()) {
+            return redirect()->back()->with('error', 'Cannot delete property with existing tenancy records.');
         }
 
         $property->delete();

@@ -50,9 +50,15 @@ class TenantController extends Controller
      */
     public function store(StoreTenantRequest $request): RedirectResponse
     {
-        Tenant::create($request->validated());
+        $tenant = Tenant::create($request->validated());
 
-        return redirect()->route('tenants.index')->with('success', 'Tenant created successfully.');
+        return redirect()->route('tenants.index', [
+            'dir' => 'asc',
+            'page' => 1,
+            'per_page' => 10,
+            'q' => $tenant->full_name,
+            'sort' => 'full_name',
+        ])->with('success', 'Tenant created successfully.');
     }
 
     /**
