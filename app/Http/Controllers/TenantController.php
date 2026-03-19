@@ -8,32 +8,32 @@ use Inertia\Inertia;
 use App\Http\Requests\Settings\StoreTenantRequest;
 use App\Http\Requests\Settings\UpdateTenantRequest;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\Concerns\HasIndexFilters;
 
 class TenantController extends Controller
 {
+    use HasIndexFilters;
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $q       = (string) $request->query('q', '');
-        $perPage = (int) $request->integer('per_page', 10);
-        $sort    = $request->query('sort', 'full_name');
-        $dir     = $request->query('dir', 'asc');
-
-        $sortable = ['id', 'full_name', 'updated_at'];
-        if (!in_array($sort, $sortable, true)) $sort = 'full_name';
-        $dir = strtolower($dir) === 'desc' ? 'desc' : 'asc';
+        $filters = $this->resolveIndexFilters($request, [
+            'default_sort' => 'full_name',
+            'default_dir' => 'asc',
+            'default_per_page' => 10,
+            'sortable' => ['id', 'full_name', 'updated_at'],
+        ]);
 
         $tenants = Tenant::query()
-            ->when($q !== '', fn($qb) => $qb->where('full_name', 'like', "%{$q}%"))
-            ->orderBy($sort, $dir)
-            ->paginate($perPage)
+            ->when($filters['q'] !== '', fn($qb) => $qb->where('full_name', 'like', "%{$filters['q']}%"))
+            ->orderBy($filters['sort'], $filters['dir'])
+            ->paginate($filters['per_page'])
             ->withQueryString();
 
         return Inertia::render('tenants/index', [
             'tenants' => $tenants,
-            'filters'   => ['q' => $q, 'per_page' => $perPage, 'sort' => $sort, 'dir' => $dir],
+            'filters' => $filters,
         ]);
     }
 

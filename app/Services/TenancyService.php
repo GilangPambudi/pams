@@ -95,4 +95,78 @@ class TenancyService
             return $tenancy;
         });
     }
+
+    /**
+     * Migrate tenancy from CSV data.
+     */
+    public function migrateTenancy(array $data): Tenancy
+    {
+        return DB::transaction(function () use ($data) {
+            // Find or Create Tenant
+            $tenantQuery = Tenant::where('full_name', $data['Nama']);
+            if (!empty($data['Nomor HP'])) {
+                $tenantQuery->where('phone_number', $data['Nomor HP']);
+            }
+            $tenant = $tenantQuery->first();
+
+            if (!$tenant) {
+                $tenant = Tenant::create([
+                    'full_name' => $data['Nama'],
+                    'gender' => !empty($data['Gender']) ? $data['Gender'] : 'Laki-laki',
+                    'date_of_birth' => !empty($data['Tanggal Lahir']) ? $data['Tanggal Lahir'] : null,
+                    'origin_city' => !empty($data['Asal']) ? $data['Asal'] : '-',
+                    'occupation' => !empty($data['Pekerjaan']) ? $data['Pekerjaan'] : null,
+                    'workplace_name' => !empty($data['Tempat Kerja']) ? $data['Tempat Kerja'] : null,
+                    'phone_number' => !empty($data['Nomor HP']) ? $data['Nomor HP'] : null,
+                ]);
+            }
+
+            $rentPrice = floatval(preg_replace('/[^0-9]/', '', $data['Harga Sewa']));
+            $startDate = \Carbon\Carbon::parse($data['Tanggal Mulai']);
+
+            $paidForMonthsStr = trim($data['Periode Pembayaran'] ?? '');
+            $paidForMonths = 0;
+
+            if ($paidForMonthsStr !== '') {
+                $paidForMonths = (int) $paidForMonthsStr;
+            } else {
+                $now = now();
+                $monthsPassed = $startDate->diffInMonths($now);
+                
+                $dueDateThisMonth = $startDate->copy()->addMonths($monthsPassed);
+                if ($now->greaterThanOrEqualTo($dueDateThisMonth)) {
+                    $monthsPassed++;
+                }
+                
+                $paidForMonths = max(1, $monthsPassed);
+            }
+
+            $validUntil = $startDate->copy()->addMonths($paidForMonths);
+
+            $tenancy = Tenancy::create([
+                'tenant_id' => $tenant->id,
+                'property_id' => $data['property_id'],
+                'room_number' => null,
+                'start_date' => $startDate->toDateString(),
+                'rent_price' => $rentPrice,
+                'status' => 'active',
+                'valid_until' => $validUntil->toDateString(),
+                'paid_for_months' => $paidForMonths,
+            ]);
+
+            for ($i = 0; $i < $paidForMonths; $i++) {
+                $paymentDate = $startDate->copy()->addMonths($i);
+                
+                Payment::create([
+                    'tenancy_id' => $tenancy->id,
+                    'amount' => $rentPrice,
+                    'payment_date' => $paymentDate->toDateString(),
+                    'payment_type' => 'monthly_rent',
+                    'notes' => 'Migrasi sistem otomatis: Tagihan bulan ke-' . ($i + 1),
+                ]);
+            }
+
+            return $tenancy;
+        });
+    }
 }
